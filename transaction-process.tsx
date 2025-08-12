@@ -82,13 +82,13 @@ export default function Component() {
       <div className="flex items-center justify-between">
         {/* Left Content */}
         <div className="flex-1 pr-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Transaction Process</h2>
-          <p className="text-gray-700 text-lg leading-relaxed mb-6 max-w-md">
+          <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Transaction Process</h2>
+          <p className="text-xl text-gray-700 leading-relaxed mb-8 max-w-md">
             Our process guides you from assessment to completion with precision, ensuring a seamless transaction and
             minimal business disruption.
           </p>
           <Button
-            className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-medium"
+            className="bg-gray-800 hover:bg-gray-700 text-white px-8 py-4 rounded-md font-medium text-lg"
             onClick={() => console.log("Learn more clicked")}
           >
             Learn more
