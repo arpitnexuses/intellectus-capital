@@ -78,7 +78,7 @@ export default function Component() {
   const center = 144
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 bg-gray-50 border border-gray-300">
+    <div className="w-full max-w-6xl mx-auto bg-white">
       <div className="flex items-center justify-between">
         {/* Left Content */}
         <div className="flex-1 pr-12">
