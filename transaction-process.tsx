@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export default function Component() {
   const [activeStep, setActiveStep] = useState(1)
   const [isAnimating, setIsAnimating] = useState(false)
+  const isMobile = useIsMobile()
 
   // Define the 6 steps with their labels
   const steps = [
@@ -74,38 +76,38 @@ export default function Component() {
     return { x, y }
   }
 
-  const radius = 138
-  const center = 144
+  const radius = isMobile ? 122 : 138
+  const center = isMobile ? 128 : 144
 
   return (
-    <div className="w-full max-w-6xl mx-auto bg-white">
-      <div className="flex items-center justify-between">
+    <div className={`w-full max-w-6xl mx-auto bg-white ${isMobile ? 'px-4' : ''}`}>
+      <div className={`flex items-center ${isMobile ? 'flex-col space-y-8' : 'justify-between'}`}>
         {/* Left Content */}
-        <div className="flex-1 pr-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Transaction Process</h2>
-          <p className="text-xl text-gray-700 leading-relaxed mb-8 max-w-md">
+        <div className={`flex-1 ${isMobile ? 'text-center px-4' : 'pr-12'}`}>
+          <h2 className={`font-bold text-gray-900 mb-6 ${isMobile ? 'text-3xl' : 'text-4xl'}`}>Our Transaction Process</h2>
+          <p className={`text-gray-700 leading-relaxed mb-8 ${isMobile ? 'text-lg text-center max-w-full' : 'text-xl max-w-md'}`}>
             Our process guides you from assessment to completion with precision, ensuring a seamless transaction and
             minimal business disruption.
           </p>
           <Button
-            className="bg-gray-800 hover:bg-gray-700 text-white px-8 py-4 rounded-md font-medium text-lg"
-            onClick={() => console.log("Learn more clicked")}
+            className={`bg-gray-800 hover:bg-gray-700 text-white rounded-md font-medium text-lg ${isMobile ? 'px-6 py-3 text-base w-full max-w-xs' : 'px-8 py-4'}`}
+            onClick={() => window.open('https://intellectuscapital.com.au/capabilities-2/', '_blank')}
           >
             Learn more
           </Button>
         </div>
 
         {/* Right Side - Process Visualization */}
-        <div className="flex-1 flex justify-center items-center">
-          <div className="relative w-96 h-80">
+        <div className={`flex justify-center items-center ${isMobile ? 'w-full' : 'flex-1'}`}>
+          <div className={`relative ${isMobile ? 'w-80 h-72' : 'w-96 h-80'}`}>
             {/* Segmented Wheel */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative w-72 h-72">
+              <div className={`relative ${isMobile ? 'w-64 h-64' : 'w-72 h-72'}`}>
                 {/* SVG for perfect circular segments */}
                 <svg
-                  width="288"
-                  height="288"
-                  viewBox="0 0 288 288"
+                  width={isMobile ? "256" : "288"}
+                  height={isMobile ? "256" : "288"}
+                  viewBox={isMobile ? "0 0 256 256" : "0 0 288 288"}
                   className="absolute inset-0 cursor-pointer"
                 >
                   {/* Progressive fill from step 1 to current active step */}
@@ -216,14 +218,15 @@ export default function Component() {
                         key={step.id}
                         d={segmentPath}
                         fill="transparent"
-                        className="cursor-pointer hover:opacity-20"
+                        className={`cursor-pointer ${isMobile ? '' : 'hover:opacity-20'}`}
                         onClick={() => handleStepClick(step.id)}
                         style={{ 
                           cursor: 'pointer',
                           stroke: 'none',
                           strokeWidth: 0,
                           vectorEffect: 'non-scaling-stroke',
-                          shapeRendering: 'crispEdges'
+                          shapeRendering: 'crispEdges',
+                          touchAction: isMobile ? 'manipulation' : 'auto'
                         }}
                       />
                     )
@@ -240,17 +243,17 @@ export default function Component() {
                   if (isCompleted) return null
                   
                   return (
-                    <div
-                      key={step.id}
-                      className="absolute cursor-pointer"
-                      style={{
-                        left: position.x - 20,
-                        top: position.y - 20,
-                        width: '40px',
-                        height: '40px',
-                      }}
-                      onClick={() => handleStepClick(step.id)}
-                    >
+                                          <div
+                        key={step.id}
+                        className={`absolute cursor-pointer ${isMobile ? 'touch-manipulation' : ''}`}
+                        style={{
+                          left: position.x - 20,
+                          top: position.y - 20,
+                          width: '40px',
+                          height: '40px',
+                        }}
+                        onClick={() => handleStepClick(step.id)}
+                      >
                       {isActive ? (
                         // Active step with dark circle badge
                         <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold text-lg">
@@ -262,6 +265,8 @@ export default function Component() {
                           {step.id}
                         </div>
                       )}
+                      
+
                     </div>
                   )
                 })}
@@ -276,24 +281,42 @@ export default function Component() {
                     let labelOffset
                     let verticalOffset = -10 // Default vertical position
                     
-                    if (step.id === 3) {
-                      labelOffset = 35 // Step 3: move further right
-                      verticalOffset = 20 // Step 3: label below the number
-                    } else if (step.id === 4) {
-                      labelOffset = -130 // Step 4: move slightly further left for gap
-                    } else if (step.id === 6) {
-                      labelOffset = -140 // Step 6: move further left
-                      verticalOffset = -40 // Step 6: label above the number
-                    } else if (isLeftSide) {
-                      labelOffset = -120 // Other left side steps (5)
+                    if (isMobile) {
+                      // Mobile positioning - adjust for smaller screen
+                      if (step.id === 3) {
+                        labelOffset = 25 // Step 3: move right
+                        verticalOffset = 15 // Step 3: label below the number
+                      } else if (step.id === 4) {
+                        labelOffset = -100 // Step 4: move left
+                      } else if (step.id === 6) {
+                        labelOffset = -110 // Step 6: move left
+                        verticalOffset = -35 // Step 6: label above the number
+                      } else if (isLeftSide) {
+                        labelOffset = -95 // Other left side steps (5)
+                      } else {
+                        labelOffset = 20 // Right side steps (1, 2)
+                      }
                     } else {
-                      labelOffset = 25 // Right side steps (1, 2)
+                      // Desktop positioning
+                      if (step.id === 3) {
+                        labelOffset = 35 // Step 3: move further right
+                        verticalOffset = 20 // Step 3: label below the number
+                      } else if (step.id === 4) {
+                        labelOffset = -130 // Step 4: move slightly further left for gap
+                      } else if (step.id === 6) {
+                        labelOffset = -140 // Step 6: move further left
+                        verticalOffset = -40 // Step 6: label above the number
+                      } else if (isLeftSide) {
+                        labelOffset = -120 // Other left side steps (5)
+                      } else {
+                        labelOffset = 25 // Right side steps (1, 2)
+                      }
                     }
                     
                     return (
                       <div
                         key={`label-${step.id}`}
-                        className="absolute text-gray-900 font-semibold text-lg whitespace-nowrap"
+                        className={`absolute text-gray-900 font-semibold whitespace-nowrap ${isMobile ? 'text-sm' : 'text-lg'}`}
                         style={{
                           left: position.x + labelOffset,
                           top: position.y + verticalOffset,

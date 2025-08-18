@@ -121,3 +121,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  /* Ensure smooth scrolling on mobile */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Optimize touch interactions */
+  button, [role="button"] {
+    touch-action: manipulation;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+}
